@@ -10,10 +10,15 @@ import {
 } from '@nestjs/common/decorators';
 import { BlogsService } from './blogs.service';
 
-@Controller('blogs')
+@Controller('api')
 export class BlogsController {
   constructor(protected blogsService: BlogsService) {}
-  @Get()
+  @Get('blog')
+  getBlogTest() {
+    return this.blogsService.findBlog();
+  }
+
+  @Get('blogs')
   getBlogs(@Query('term') term: string) {
     return this.blogsService.findBlogs(term);
   }

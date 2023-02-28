@@ -7,6 +7,7 @@ import { BlogsRepository } from './blogs/blogs.repository';
 import { BlogsService } from './blogs/blogs.service';
 import { Cat, CatSchema } from './blogs/cats-schema';
 import { CatsRepository } from './blogs/cats-repository.service';
+import { Blog, BlogSchema } from './blogs/blogs-schema';
 
 @Module({
   imports: [
@@ -18,6 +19,10 @@ import { CatsRepository } from './blogs/cats-repository.service';
       {
         name: Cat.name,
         schema: CatSchema,
+      },
+      {
+        name: Blog.name,
+        schema: BlogSchema,
       },
     ]),
   ],
