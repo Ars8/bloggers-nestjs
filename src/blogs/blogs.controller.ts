@@ -8,17 +8,30 @@ import {
   Delete,
   Put,
 } from '@nestjs/common/decorators';
+import { queryHandler } from 'src/helpers/queryHandler';
+import { PaginationViewType } from 'src/helpers/transformToPaginationView';
 import { BlogsService } from './blogs.service';
+import { CreateBlogDto } from './dto/create-blog.dto';
+import { OutputBlogDto } from './dto/output-blog.dto';
 
-@Controller('api')
+@Controller('blogs')
 export class BlogsController {
   constructor(protected blogsService: BlogsService) {}
-  @Get('blog')
+  @Post()
+  async create(@Body() createBlogDto: CreateBlogDto): Promise<OutputBlogDto> {
+    return this.blogsService.create(createBlogDto);
+  }
+  @Get()
   getBlogTest() {
     return this.blogsService.findBlog();
   }
 
-  @Get('blogs')
+  @Get()
+  async findAll(@Query() query: Promise<PaginationViewType<OutputBlogDto>>) {
+    return this.blogsService.findAll(queryHandler(query));
+  }
+
+  @Get()
   getBlogs(@Query('term') term: string) {
     return this.blogsService.findBlogs(term);
   }
@@ -28,14 +41,14 @@ export class BlogsController {
     return [{ id: 1 }, { id: 2 }].find((u) => u.id === +blogId);
   }
 
-  @Post()
+  /* @Post()
   createBlogs(@Body() inputModel: createBlogIntputModelType) {
     return {
       id: 15,
       name: inputModel.name,
       pageCount: inputModel.pageCount,
     };
-  }
+  } */
 
   @Delete('id')
   deleteBlog(@Param('id') blogId: string) {

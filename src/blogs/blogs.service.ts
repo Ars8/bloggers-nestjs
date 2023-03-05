@@ -1,15 +1,23 @@
-import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { Blog, BlogDocument } from './blogs-schema';
-import { BlogsRepository } from './blogs.repository';
+import { Inject, Injectable } from '@nestjs/common';
+import { QueryType } from 'src/helpers/queryHandler';
+import { PaginationViewType } from 'src/helpers/transformToPaginationView';
+import { IBlogsRepository } from './blogs.repository';
+import { CreateBlogDto } from './dto/create-blog.dto';
+import { OutputBlogDto } from './dto/output-blog.dto';
 
 @Injectable()
 export class BlogsService {
   constructor(
-    @InjectModel(Blog.name) private blogModel: Model<BlogDocument>,
-    protected blogsRepository: BlogsRepository,
+    @Inject('IBlogsRepository') protected blogsRepository: IBlogsRepository,
   ) {}
+
+  async create(createBlogDto: CreateBlogDto): Promise<OutputBlogDto> {
+    return this.blogsRepository.create(createBlogDto);
+  }
+
+  async findAll(query: QueryType): Promise<PaginationViewType<OutputBlogDto>> {
+    return this.blogsRepository.findAll(query);
+  }
 
   findBlogs(term: string) {
     return this.blogsRepository.findBlogs(term);

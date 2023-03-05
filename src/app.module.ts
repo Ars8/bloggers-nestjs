@@ -7,7 +7,8 @@ import { BlogsRepository } from './blogs/blogs.repository';
 import { BlogsService } from './blogs/blogs.service';
 import { Cat, CatSchema } from './blogs/cats-schema';
 import { CatsRepository } from './blogs/cats-repository.service';
-import { Blog, BlogSchema } from './blogs/blogs-schema';
+import { BlogsModule } from './blogs/blogs.module';
+import { Blog, BlogSchema } from './blogs/entities/blog.entity';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { Blog, BlogSchema } from './blogs/blogs-schema';
       dbName: 'nest-cats',
       loggerLevel: 'debug',
     }),
+    BlogsModule,
     MongooseModule.forFeature([
       {
         name: Cat.name,
@@ -27,6 +29,12 @@ import { Blog, BlogSchema } from './blogs/blogs-schema';
     ]),
   ],
   controllers: [AppController, BlogsController],
-  providers: [AppService, BlogsService, BlogsRepository, CatsRepository],
+  providers: [
+    AppService,
+    BlogsService,
+    BlogsRepository,
+    CatsRepository,
+    { provide: 'IBlogsRepository', useClass: BlogsRepository },
+  ],
 })
 export class AppModule {}
