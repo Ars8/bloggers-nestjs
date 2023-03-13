@@ -18,12 +18,4 @@ export class BlogsService {
   async findAll(query: QueryType): Promise<PaginationViewType<OutputBlogDto>> {
     return this.blogsRepository.findAll(query);
   }
-
-  findBlogs(term: string) {
-    return this.blogsRepository.findBlogs(term);
-  }
-
-  findBlog() {
-    return this.blogsRepository.findBlog();
-  }
 }

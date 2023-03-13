@@ -20,16 +20,6 @@ export interface IBlogsRepository {
 @Injectable()
 export class BlogsRepository {
   constructor(@InjectModel(Blog.name) private blogModel: Model<BlogDocument>) {}
-  findBlogs(term: string) {
-    return [
-      { id: 3, name: 'bloger1' },
-      { id: 2, name: 'blogik2' },
-    ].filter((u) => !term || u.name.indexOf(term) > -1);
-  }
-
-  async findBlog(): Promise<Blog[]> {
-    return this.blogModel.find().exec();
-  }
 
   async create(createBlogDto): Promise<OutputBlogDto> {
     const createdBlog = new this.blogModel({
@@ -43,10 +33,10 @@ export class BlogsRepository {
 
   async findAll(query: QueryType): Promise<PaginationViewType<OutputBlogDto>> {
     const totalCount = await this.blogModel.count({
-      name: { $regex: query.searchNameTerm, $option: '-i' },
+      name: { $regex: query.searchNameTerm },
     });
     const blogs = await this.blogModel
-      .find({ name: { $regex: query.searchNameTerm, $options: '-i' } })
+      .find({ name: { $regex: query.searchNameTerm } })
       .sort([[query.sortBy, query.sortDirection === 'asc' ? 1 : -1]])
       .skip(query.pageSize * (query.pageNumber - 1))
       .limit(query.pageSize)
@@ -58,4 +48,8 @@ export class BlogsRepository {
       idMapper(blogs),
     );
   }
+
+  /* async findAll(): Promise<Blog[]> {
+    return this.blogModel.find().exec();
+  } */
 }
