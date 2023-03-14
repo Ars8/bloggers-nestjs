@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { isValidObjectId, Model } from 'mongoose';
 import { idMapper } from 'src/helpers/id-mapper';
 import { QueryType } from 'src/helpers/queryHandler';
 import {
@@ -15,7 +15,7 @@ export interface IBlogsRepository {
   create: (createBlogDto: CreateBlogDto) => Promise<OutputBlogDto>;
   findAll: (query: QueryType) => Promise<PaginationViewType<OutputBlogDto>>;
   findBlogs: (term: string) => Promise<PaginationViewType<OutputBlogDto>>;
-  findBlog;
+  findOne: (id: string) => Promise<OutputBlogDto | null>;
 }
 @Injectable()
 export class BlogsRepository {
@@ -47,6 +47,12 @@ export class BlogsRepository {
       query.pageNumber,
       idMapper(blogs),
     );
+  }
+
+  async findOne(id: string): Promise<OutputBlogDto | null> {
+    if (!isValidObjectId(id)) return null;
+    const blog = await this.blogModel.findById(id).lean();
+    return idMapper(blog);
   }
 
   /* async findAll(): Promise<Blog[]> {

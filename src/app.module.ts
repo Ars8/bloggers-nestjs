@@ -9,6 +9,9 @@ import { Cat, CatSchema } from './blogs/cats-schema';
 import { CatsRepository } from './blogs/cats-repository.service';
 import { BlogsModule } from './blogs/blogs.module';
 import { Blog, BlogSchema } from './blogs/entities/blog.entity';
+import { PostsModule } from './posts/posts.module';
+import { PostsRepository } from './posts/posts.repository';
+import { Post, PostSchema } from './posts/entities/post.entity';
 
 @Module({
   imports: [
@@ -17,6 +20,7 @@ import { Blog, BlogSchema } from './blogs/entities/blog.entity';
       loggerLevel: 'debug',
     }),
     BlogsModule,
+    PostsModule,
     MongooseModule.forFeature([
       {
         name: Cat.name,
@@ -26,6 +30,10 @@ import { Blog, BlogSchema } from './blogs/entities/blog.entity';
         name: Blog.name,
         schema: BlogSchema,
       },
+      {
+        name: Post.name,
+        schema: PostSchema,
+      },
     ]),
   ],
   controllers: [AppController, BlogsController],
@@ -33,6 +41,7 @@ import { Blog, BlogSchema } from './blogs/entities/blog.entity';
     AppService,
     BlogsService,
     BlogsRepository,
+    PostsRepository,
     CatsRepository,
     { provide: 'IBlogsRepository', useClass: BlogsRepository },
   ],
